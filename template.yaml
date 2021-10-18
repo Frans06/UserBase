@@ -32,21 +32,6 @@ Resources:
       UserPoolId: !Ref UserPool
       ExplicitAuthFlows:
         - ADMIN_NO_SRP_AUTH
-  CognitoTriggered:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub ${AWS::StackName}-CognitoTriggered
-      Description: !Sub
-        - Stack ${StackTagName} Environment ${EnvironmentTagName} Signup ${ResourceName}
-        - ResourceName: CognitoTriggered
-      CodeUri: src/CognitoTriggered
-      Handler: index.handler
-      Runtime: nodejs12.x
-      MemorySize: 3008
-      Timeout: 30
-      Tracing: Active
-      Policies:
-        - AWSXrayWriteOnlyAccess
   UserPoolToCognitoTriggeredPermission:
     Type: AWS::Lambda::Permission
     Properties:
