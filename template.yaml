@@ -3,18 +3,27 @@ Transform: AWS::Serverless-2016-10-31
 Resources:
   UserPool:
     Type: AWS::Cognito::UserPool
+    UpdateReplacePolicy: Retain
     Properties:
-      AdminCreateUserConfig:
-        AllowAdminCreateUserOnly: true
-      UserPoolName: !Sub ${AWS::StackName}-UserPool
-      UsernameAttributes:
+      UserPoolName: UsersMainPool
+      Schema:
+        - Name: email
+          Required: true
+          Mutable: true
+        - Name: username
+          Required: false
+          Mutable: true
+          AttributeDataType: String
+      AutoVerifiedAttributes:
         - email
-      LambdaConfig:
-        PreSignUp: !GetAtt CognitoTriggered.Arn
-        PostConfirmation: !GetAtt CognitoTriggered.Arn
-        PreAuthentication: !GetAtt CognitoTriggered.Arn
-        PostAuthentication: !GetAtt CognitoTriggered.Arn
-        CustomMessage: !GetAtt CognitoTriggered.Arn
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: false
+          RequireNumbers: false
+          RequireSymbols: false
+          RequireUppercase: false
+      MfaConfiguration: OPTIONAL
   UserPoolClient:
     Type: AWS::Cognito::UserPoolClient
     Properties:
